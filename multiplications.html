@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+    <head>        
+        <meta charset="UTF-8">
+    </head>
+    <style>
+        #score {
+            font-size: 36px;
+        }
+        #problem {
+            font-size: 36px;
+        }
+        #time {
+            font-size: 36px;
+        }
+        #answer {
+            font-size: 36px;
+            width: 80px;
+        }
+        #result {
+            font-size: 36px;
+            font-style: italic;
+        }
+    </style>
+<body>
+    <p>
+        Score:
+        <div id="score"></div>
+    </p>
+    <p>
+        Time:
+        <div id="time"></div>
+    </p>
+    <p>
+        What is...
+        <div id="problem"></div>
+    </p>
+    <p>
+        <div id="result"></div>
+    </p>
+    <p>
+        <div id="log"></div>
+    </p>
+</body>
+    <script
+    src="https://code.jquery.com/jquery-3.5.0.min.js"
+    integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+    crossorigin="anonymous"></script>
+    <script>
+        var maxtime = 10;
+        var max_a = 6;
+        var max_b = 6;
+        var correct_score = 100;
+        var wrong_score = -10;
+        var score = 0;
+        var time = maxtime;
+        var a = 0;
+        var b = 0;
+
+        getRandomInt = function (max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        attempt_answer = function() {
+            ans = "-1"
+            try {
+                ans = $('#answer').val();
+            } catch(err) {                
+            }
+            if(a * b == parseInt(ans)) {
+                score += correct_score;
+                $('#result').html("Correct!");
+                $('#log').append("[" + a + " x " + b + " = " + ans + "] Correct! Score +100<br />")
+            } else {
+                score += wrong_score;
+                $('#result').html("Wrong.... :(");
+                $('#log').append("[" + a + " x " + b + " = " + ans + "] Wrong! Score -10<br />")
+            }
+            $('#score').html(score);
+        }
+
+        answer_keypress = function(event) {
+            if (event.which == 13) {
+                attempt_answer();
+                generate_problem();
+                time = maxtime;
+            }
+        }
+
+        generate_problem = function() {
+            a = getRandomInt(max_a)+1;
+            b = getRandomInt(max_b)+1;
+            $('#problem').html(a + " x " + b + " ? " + '<input type="text" id="answer" value="">');
+            $('#answer').focus();
+            $('#answer').keypress(answer_keypress);
+        }
+
+        display_time = function() {
+            for (var i = 0, s = ""; i < time; i++)
+                s += "⌛";
+            if(time==0) {
+                s = "🥺";
+            }
+            $('#time').html(s);
+
+        }
+
+        interval_function = function() {
+            time = time - 1;
+            display_time();
+            if(time <= 0) {
+                attempt_answer();
+                generate_problem();
+                time = maxtime;
+            }
+        }
+    
+        start_game = function() {
+            $('#score').html(score);
+            generate_problem();
+            setInterval(interval_function, 1000);
+        }
+
+        $(document).ready(start_game);
+    </script>
+</html>
