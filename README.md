@@ -2,7 +2,7 @@
 
 Simple Javascript based multiplication game for elementary student
 
-![](multiplication.png)
+![](images/multiplication.png)
 
 Adjust the settings from the Javascript variables:
 
